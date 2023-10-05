@@ -1,22 +1,26 @@
 package com.abdullah.composeapp.ui.meals
 
-import android.widget.ImageView.ScaleType
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-
-import coil.compose.rememberAsyncImagePainter
-
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.abdullah.composeapp.data.network.MealsModel
+import com.abdullah.composeapp.ui.models.Resource
 import com.abdullah.composeapp.ui.theme.Grey
 
 @Preview(showBackground = true)
@@ -26,12 +30,15 @@ fun MealsPagePreview() {
 }
 
 @Composable
-fun MealsPage() {
-    val viewModel: MealsViewModel = MealsViewModel()
+fun MealsPage(
+    viewModel: MealsViewModel = viewModel()
+) {
 
-    LaunchedEffect(key1 = "123", block = {
-        viewModel.getMeals()
-    })
+    LaunchedEffect(viewModel){
+        viewModel.getMeals().collect{
+            viewModel.requestState.value = it
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -44,38 +51,87 @@ fun MealsPage() {
             TopAppBar {
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
             }
-//            Card
-            MealCard(viewModel.state.value)
+
+            when (viewModel.requestState.value) {
+                is Resource.Loading -> {
+                    LoadingView()
+                }
+                is Resource.Error -> {
+                    GeneralErrorScreen()
+                }
+                is Resource.Success ->{
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ){
+                        items(viewModel.state.value.toList().size){ item ->
+                            MealCard(meals = viewModel.state.value[item])
+                        }
+                    }
+                }
+                null ->{}
+                else -> {}
+            }
+
         }
     }
 }
 
+@Composable
+private fun LoadingView() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    )  {
+        AnimatedVisibility(
+            enter = fadeIn(),
+            exit = fadeOut(),
+            visible = true,
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+}
 
 @Composable
-private fun MealCard(meals: List<MealsModel.Meal>) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = 16.dp)
-    ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(all = 8.dp)){
-            Image(
-                painter = rememberAsyncImagePainter(if(meals.isNotEmpty()) meals[0].strMealThumb else "" ),
-                contentDescription = "",
-                modifier = Modifier.size(90.dp),
-                contentScale = ContentScale.FillBounds,
+private fun MealCard(meals: MealsModel.Meal) {
 
-            )
-            Column {
-                Text(if(meals.isEmpty()) "Meal Name" else meals.get(0).strMeal, Modifier.padding(all = 8.dp))
-                Text(
-                    "Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients ",
-                    Modifier.padding(all = 8.dp),
-                    style = androidx.compose.ui.text.TextStyle(color = Grey)
-                )
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 16.dp)
+        ) {
+            Row {
+
+                Image(
+                    painter = rememberAsyncImagePainter(meals.strMealThumb),
+                    contentDescription = "",
+                    modifier = Modifier.size(90.dp),
+                    contentScale = ContentScale.FillBounds,
+
+                    )
+                Column {
+                    Text(meals.strMeal, Modifier.padding(all = 8.dp))
+                    Text(
+                        "Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients ",
+                        Modifier.padding(all = 8.dp),
+                        style = TextStyle(color = Grey)
+                    )
+                }
             }
         }
+
+}
+
+
+@Composable
+fun GeneralErrorScreen(){
+    Box(
+        modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+    ) {
+
+    Text(text = "Ops! something wrong happened",)
     }
 }

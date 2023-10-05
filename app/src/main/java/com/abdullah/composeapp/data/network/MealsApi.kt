@@ -2,9 +2,9 @@ package com.abdullah.composeapp.data.network
 
 import retrofit2.http.GET
 
-interface MealsApi {
+interface RestApi {
 
-    @GET("filter.php?a=Egyptian")
+    @GET("1/filter.php?a=Egyptian")
     suspend fun getMealsList():MealsModel
 
 }
