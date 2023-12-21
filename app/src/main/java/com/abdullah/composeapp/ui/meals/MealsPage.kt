@@ -1,42 +1,84 @@
 package com.abdullah.composeapp.ui.meals
 
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.abdullah.composeapp.data.network.MealsModel
 import com.abdullah.composeapp.ui.models.Resource
-import com.abdullah.composeapp.ui.theme.Grey
+
 
 @Preview(showBackground = true)
 @Composable
 fun MealsPagePreview() {
-    MealsPage()
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colors.background)
+        ) {
+            TopAppBar {
+                Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
+            }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(10) { item ->
+                    MealCard(meals = MealsModel(meals = listOf(
+                        MealsModel.Meal("", "Egyptian Fattah with Rice and Banana", "https://picsum.photos/seed/picsum/200/300",),
+                        MealsModel.Meal("", "Ma3soob", "https://picsum.photos/seed/picsum/200/300",),
+                        MealsModel.Meal("", "TITLE TITLE TITLE TITILE TITILE TITLE TITLE TILE ", "https://picsum.photos/seed/picsum/200/300",),
+
+                    )).meals[item])
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun MealsPage(
-    viewModel: MealsViewModel = viewModel()
+    mViewModel: MealsViewModel = viewModel()
 ) {
 
-    LaunchedEffect(viewModel){
-        viewModel.getMeals().collect{
-            viewModel.requestState.value = it
+    LaunchedEffect(mViewModel) {
+        mViewModel.getMeals().collect {
+            mViewModel.requestState.value = it
         }
     }
 
@@ -52,24 +94,26 @@ fun MealsPage(
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
             }
 
-            when (viewModel.requestState.value) {
+            when (mViewModel.requestState.value) {
                 is Resource.Loading -> {
                     LoadingView()
                 }
+
                 is Resource.Error -> {
                     GeneralErrorScreen()
                 }
-                is Resource.Success ->{
 
+                is Resource.Success -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
-                    ){
-                        items(viewModel.state.value.toList().size){ item ->
-                            MealCard(meals = viewModel.state.value[item])
+                    ) {
+                        items(mViewModel.state.value.toList().size) { item ->
+                            MealCard(meals = mViewModel.state.value[item])
                         }
                     }
                 }
-                null ->{}
+
+                null -> {}
                 else -> {}
             }
 
@@ -82,7 +126,7 @@ private fun LoadingView() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
-    )  {
+    ) {
         AnimatedVisibility(
             enter = fadeIn(),
             exit = fadeOut(),
@@ -95,43 +139,105 @@ private fun LoadingView() {
 
 @Composable
 private fun MealCard(meals: MealsModel.Meal) {
-
-
-        Card(
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .requiredHeight(350.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 16.dp)
+                .fillMaxHeight()
+                .padding(0.dp)
         ) {
-            Row {
+            val (ivFood, tvTitle, tvDescription, shadow) = createRefs()
+            val centerGuideline = createGuidelineFromTop(0.45f)
+            createVerticalChain(tvTitle, tvDescription, chainStyle = ChainStyle.Packed(0.9f))
 
-                Image(
-                    painter = rememberAsyncImagePainter(meals.strMealThumb),
-                    contentDescription = "",
-                    modifier = Modifier.size(90.dp),
-                    contentScale = ContentScale.FillBounds,
+            Image(
+                painter = rememberAsyncImagePainter(meals.strMealThumb),
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(0.dp)
+                    .constrainAs(ivFood) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        bottom.linkTo(parent.bottom)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    },
+                contentScale = ContentScale.FillBounds,
+            )
 
+//            shadow effect
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black),
+                            startY = 0f,
+                            endY = 1100f
+                        )
                     )
-                Column {
-                    Text(meals.strMeal, Modifier.padding(all = 8.dp))
-                    Text(
-                        "Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients ",
-                        Modifier.padding(all = 8.dp),
-                        style = TextStyle(color = Grey)
-                    )
-                }
-            }
+                    .graphicsLayer {
+                        // Apply the blur effect based on the 'blurEnabled' state
+                        alpha = if (true) 0.7f else 1f
+                    }
+                    .constrainAs(shadow) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+            )
+
+            Text(
+                meals.strMeal,
+                Modifier
+                    .padding(all = 8.dp)
+                    .constrainAs(tvTitle) {
+                        top.linkTo(centerGuideline)
+                        bottom.linkTo(tvDescription.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.wrapContent
+                        verticalChainWeight = 1f
+                    },
+                style = TextStyle(color = Color.White, fontSize = MaterialTheme.typography.h5.fontSize)
+            )
+            Text(
+                "Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients ",
+                Modifier
+                    .padding(all = 8.dp)
+                    .constrainAs(tvDescription) {
+                        top.linkTo(tvTitle.bottom)
+                        start.linkTo(tvTitle.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        height = Dimension.wrapContent
+                        verticalChainWeight = 1f
+                    },
+                style = TextStyle(color = Gray, fontSize = MaterialTheme.typography.subtitle2.fontSize),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
         }
+    }
 
 }
 
 
 @Composable
-fun GeneralErrorScreen(){
+fun GeneralErrorScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center
     ) {
 
-    Text(text = "Ops! something wrong happened",)
+        Text(text = "Ops! something wrong happened")
     }
 }
