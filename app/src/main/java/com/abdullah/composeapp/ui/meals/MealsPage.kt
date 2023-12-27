@@ -5,11 +5,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,8 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.abdullah.composeapp.data.navigation.NavTarget
 import com.abdullah.composeapp.data.network.MealsModel
 import com.abdullah.composeapp.ui.models.Resource
 
@@ -73,9 +76,11 @@ fun MealsPagePreview() {
 
 @Composable
 fun MealsPage(
-    mViewModel: MealsViewModel = viewModel()
+    navController: NavController,
+    mViewModel: MealsViewModel,
 ) {
 
+    //start on launching this Composable (like initState() in Flutter )
     LaunchedEffect(mViewModel) {
         mViewModel.getMeals().collect {
             mViewModel.requestState.value = it
@@ -83,16 +88,23 @@ fun MealsPage(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colors.background)
+
         ) {
             TopAppBar {
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
             }
+
+            Box(modifier = Modifier
+                .height(30.dp)
+                .requiredHeight(80.dp))
 
             when (mViewModel.requestState.value) {
                 is Resource.Loading -> {
@@ -108,7 +120,7 @@ fun MealsPage(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(mViewModel.state.value.toList().size) { item ->
-                            MealCard(meals = mViewModel.state.value[item])
+                            MealCard(meals = mViewModel.state.value[item], navController)
                         }
                     }
                 }
@@ -138,7 +150,7 @@ private fun LoadingView() {
 }
 
 @Composable
-private fun MealCard(meals: MealsModel.Meal) {
+private fun MealCard(meals: MealsModel.Meal, navController: NavController? = null) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -150,6 +162,10 @@ private fun MealCard(meals: MealsModel.Meal) {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(0.dp)
+                .clickable {
+                    navController?.navigate(NavTarget.MealDetailsPage.name)
+                    navController?.navigate("${NavTarget.MealDetailsPage.name}/${meals.idMeal}")
+                }
         ) {
             val (ivFood, tvTitle, tvDescription, shadow) = createRefs()
             val centerGuideline = createGuidelineFromTop(0.45f)

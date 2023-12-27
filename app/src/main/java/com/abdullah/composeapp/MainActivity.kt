@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.abdullah.composeapp.ui.meals.MealsPage
+import androidx.navigation.compose.rememberNavController
+import com.abdullah.composeapp.data.navigation.NavigationComponent
 import com.abdullah.composeapp.ui.theme.AppThemeAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,12 +20,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
             AppThemeAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MealsPage()
+                    NavigationComponent(
+                        navController = navController,
+                    )
                 }
             }
         }
