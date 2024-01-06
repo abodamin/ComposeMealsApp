@@ -1,7 +1,9 @@
 package com.abdullah.composeapp.data.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.abdullah.composeapp.data.network.RestApi
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +38,15 @@ object AppModule {
             .create(RestApi::class.java)
     }
 
+    @Provides
+    fun providesSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("FOOD_APP_SHARED_PREF", Context.MODE_PRIVATE)
+    }
 
+    @Provides
+    fun providesGson(): Gson{
+        return Gson()
+    }
 
 
 }

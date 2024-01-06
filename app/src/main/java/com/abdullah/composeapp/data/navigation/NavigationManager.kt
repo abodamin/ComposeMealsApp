@@ -39,7 +39,7 @@ fun NavigationComponent(
 
             val viewModel: MealDetailsViewModel = hiltViewModel<MealDetailsViewModel>()
 
-            MealDetailsPage(viewModel, mealObject)
+            MealDetailsPage(viewModel, navController ,mealObject)
         }
     }
 
