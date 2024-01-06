@@ -42,6 +42,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.abdullah.composeapp.data.navigation.NavTarget
 import com.abdullah.composeapp.data.network.MealsModel
 import com.abdullah.composeapp.ui.models.Resource
+import com.google.gson.Gson
+import java.net.URLEncoder
 
 
 @Preview(showBackground = true)
@@ -62,12 +64,28 @@ fun MealsPagePreview() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(10) { item ->
-                    MealCard(meals = MealsModel(meals = listOf(
-                        MealsModel.Meal("", "Egyptian Fattah with Rice and Banana", "https://picsum.photos/seed/picsum/200/300",),
-                        MealsModel.Meal("", "Ma3soob", "https://picsum.photos/seed/picsum/200/300",),
-                        MealsModel.Meal("", "TITLE TITLE TITLE TITILE TITILE TITLE TITLE TILE ", "https://picsum.photos/seed/picsum/200/300",),
+                    MealCard(
+                        meals = MealsModel(
+                            meals = listOf(
+                                MealsModel.Meal(
+                                    "",
+                                    "Egyptian Fattah with Rice and Banana",
+                                    "https://picsum.photos/seed/picsum/200/300",
+                                ),
+                                MealsModel.Meal(
+                                    "",
+                                    "Ma3soob",
+                                    "https://picsum.photos/seed/picsum/200/300",
+                                ),
+                                MealsModel.Meal(
+                                    "",
+                                    "TITLE TITLE TITLE TITILE TITILE TITLE TITLE TILE ",
+                                    "https://picsum.photos/seed/picsum/200/300",
+                                ),
 
-                    )).meals[item])
+                                )
+                        ).meals[item]
+                    )
                 }
             }
         }
@@ -102,9 +120,11 @@ fun MealsPage(
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
             }
 
-            Box(modifier = Modifier
-                .height(30.dp)
-                .requiredHeight(80.dp))
+            Box(
+                modifier = Modifier
+                    .height(30.dp)
+                    .requiredHeight(80.dp)
+            )
 
             when (mViewModel.requestState.value) {
                 is Resource.Loading -> {
@@ -163,8 +183,8 @@ private fun MealCard(meals: MealsModel.Meal, navController: NavController? = nul
                 .fillMaxHeight()
                 .padding(0.dp)
                 .clickable {
-                    navController?.navigate(NavTarget.MealDetailsPage.name)
-                    navController?.navigate("${NavTarget.MealDetailsPage.name}/${meals.idMeal}")
+                    val mealJson = URLEncoder.encode(Gson().toJson(meals), "UTF-8")
+                    navController?.navigate("${NavTarget.MealDetailsPage.name}/${mealJson}")
                 }
         ) {
             val (ivFood, tvTitle, tvDescription, shadow) = createRefs()
@@ -223,7 +243,10 @@ private fun MealCard(meals: MealsModel.Meal, navController: NavController? = nul
                         height = Dimension.wrapContent
                         verticalChainWeight = 1f
                     },
-                style = TextStyle(color = Color.White, fontSize = MaterialTheme.typography.h5.fontSize)
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = MaterialTheme.typography.h5.fontSize
+                )
             )
             Text(
                 "Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients ",
@@ -237,7 +260,10 @@ private fun MealCard(meals: MealsModel.Meal, navController: NavController? = nul
                         height = Dimension.wrapContent
                         verticalChainWeight = 1f
                     },
-                style = TextStyle(color = Gray, fontSize = MaterialTheme.typography.subtitle2.fontSize),
+                style = TextStyle(
+                    color = Gray,
+                    fontSize = MaterialTheme.typography.subtitle2.fontSize
+                ),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
             )
