@@ -5,5 +5,7 @@
 - upload to store or linked in (shine).
 
 ### Current
-- Design Details page.
+- ~~Design Details page.~~
+- Call Rest Api in details page
+- make a button to do something (maybe map)
 - 
