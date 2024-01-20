@@ -1,5 +1,6 @@
 package com.abdullah.composeapp.ui.details
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -25,6 +27,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,18 +41,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.Visibility
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.abdullah.composeapp.R
-import com.abdullah.composeapp.data.network.MealsModel
+import com.abdullah.composeapp.data.network.responses.MealsModel
+import com.abdullah.composeapp.ui.common.GeneralErrorScreen
+import com.abdullah.composeapp.ui.models.Resource
 import com.abdullah.composeapp.ui.theme.Shapes
 import com.abdullah.composeapp.ui.theme.primaryColor
+import timber.log.Timber
 import kotlin.random.Random
 
 
 @Composable()
 fun MealDetailsPage(
-    viewModel: MealDetailsViewModel?,
+    viewModel: MealDetailsViewModel = hiltViewModel<MealDetailsViewModel>(),
     navController: NavController?,
     meal: MealsModel.Meal,
     isPreview: Boolean? = false
@@ -58,16 +66,28 @@ fun MealDetailsPage(
     val isFavorite by remember { derivedStateOf { viewModel?.isFavorite() ?: false } }
     val image = painterResource(id = R.drawable.ic_launcher_foreground)
 
-    viewModel!!.mealObject = meal
-    viewModel.isFavorite()
+
+
+
+    //setUp ViewModel
+    viewModel?.mealObject = meal
+    viewModel?.isFavorite()
+
+    // Trigger the Bluetooth scanning when the composable is first launched
+    LaunchedEffect(viewModel) {
+        viewModel.getMealDetails().collect{
+            viewModel.requestState.value = it
+        }
+    }
 
     Scaffold {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
+                .padding(it.calculateBottomPadding())
         ) {
-            val (appBar, ivMeal, title, about, rate, description, btn) = createRefs()
+            val (appBar, ivMeal, title, about, rate, description, btn, loader) = createRefs()
             val startGuideline = createGuidelineFromStart(16.dp)
             val endGuideline = createGuidelineFromEnd(16.dp)
 
@@ -94,6 +114,7 @@ fun MealDetailsPage(
                     width = Dimension.matchParent
                 })
 
+            //Image
             Card(
                 elevation = 10.dp,
                 modifier = Modifier
@@ -123,14 +144,16 @@ fun MealDetailsPage(
                             .wrapContentSize()
                             .padding(16.dp)
                             .clickable {
-                                viewModel.toggleFavoriteMeal()
+                                viewModel?.toggleFavoriteMeal()
                             },
                         tint = Color.Red.copy(0.6f),
                         contentDescription = null,
                     )
                 }
             }
-            //                ------
+
+
+//                ------
             Text(meal.strMeal,
                 style = TextStyle(
                     color = Color.Black,
@@ -146,6 +169,76 @@ fun MealDetailsPage(
                         width = Dimension.fillToConstraints
                     })
             //                ------
+            when (viewModel?.requestState!!.value) {
+                is Resource.Loading -> {
+                    Log.d("","___Resource.Loading")
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .constrainAs(loader) {
+                                start.linkTo(startGuideline)
+                                end.linkTo(endGuideline)
+                                top.linkTo(title.bottom)
+                                bottom.linkTo(parent.bottom)
+                                visibility = if (viewModel.requestState.value is Resource.Loading) Visibility.Visible else Visibility.Gone
+                            }
+                    )
+                }
+
+                is Resource.Error -> {
+                    Timber.d("___Resource.Error")
+
+                    GeneralErrorScreen(visibility = if (viewModel.requestState.value is Resource.Error) Visibility.Visible else Visibility.Gone)
+
+                }
+
+                is Resource.Success -> {
+                    val data by remember{ derivedStateOf { viewModel.data }}
+
+
+                    //                ------
+                    Text("About Meal",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier
+                            .padding(top = 24.dp, bottom = 8.dp)
+                            .constrainAs(about) {
+                                start.linkTo(startGuideline)
+                                top.linkTo(rate.bottom)
+                                width = Dimension.wrapContent
+
+                            })
+                    Text(  data.meals.first().strCategory,
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier.constrainAs(description) {
+                            start.linkTo(startGuideline)
+                            end.linkTo(endGuideline)
+                            top.linkTo(about.bottom)
+                            width = Dimension.fillToConstraints
+
+                        })
+                    //                ------
+                    Button(
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .constrainAs(btn) {
+                                start.linkTo(startGuideline)
+                                end.linkTo(endGuideline)
+                                top.linkTo(description.bottom)
+                                bottom.linkTo(parent.bottom)
+                                width = Dimension.fillToConstraints
+
+                            },
+                        shape = RoundedCornerShape(20),
+                        onClick = {}
+                    ) {
+                        Text(
+                            text = "ORDER NOW",
+                            style = MaterialTheme.typography.button,
+                            color = Color.White,
+                            modifier = Modifier.padding(8.dp),
+                        )
+                    }
+                }
+            }
             Text("\$${Random(10).nextInt(100).toDouble()}",
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.h6.fontSize,
@@ -159,49 +252,11 @@ fun MealDetailsPage(
                         end.linkTo(endGuideline)
                         top.linkTo(title.top)
                         bottom.linkTo(title.bottom)
-                    })
-            //                ------
-            Text("About Meal",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .padding(top = 24.dp, bottom = 8.dp)
-                    .constrainAs(about) {
-                        start.linkTo(startGuideline)
-                        top.linkTo(rate.bottom)
-                        width = Dimension.wrapContent
-                    })
-            Text("Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description ",
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier.constrainAs(description) {
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    top.linkTo(about.bottom)
-                    width = Dimension.fillToConstraints
-                })
-            //                ------
-            Button(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .constrainAs(btn) {
-                        start.linkTo(startGuideline)
-                        end.linkTo(endGuideline)
-                        top.linkTo(description.bottom)
-                        bottom.linkTo(parent.bottom)
-                        width = Dimension.fillToConstraints
-                    },
-                shape= RoundedCornerShape(20),
-                onClick = {}
-            ) {
-                Text(
-                    text = "ORDER NOW",
-                    style = MaterialTheme.typography.button,
-                    color = Color.White,
-                    modifier = Modifier.padding(8.dp),
-                )
-            }
-            //                ------
-        }
 
+                    })
+
+        }
+        //                ------
     }
 }
 
@@ -211,7 +266,6 @@ fun MealDetailsPage(
 fun MealDetailsPreview() {
     MealDetailsPage(
         isPreview = true,
-        viewModel = null,
         navController = null,
         meal = MealsModel.Meal(
             "1",

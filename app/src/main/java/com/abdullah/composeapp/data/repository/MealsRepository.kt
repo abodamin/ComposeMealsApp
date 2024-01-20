@@ -1,7 +1,7 @@
 package com.abdullah.composeapp.data.repository
 
-import com.abdullah.composeapp.data.network.MealsModel
 import com.abdullah.composeapp.data.network.RestApi
+import com.abdullah.composeapp.data.network.responses.MealsModel
 import javax.inject.Inject
 
 
@@ -13,7 +13,7 @@ class MealsRepository @Inject constructor(
 
     }
 
-    suspend fun getMealsRepository(): MealsModel{
+    suspend fun getMealsRepository(): MealsModel {
         return retrofit.getMealsList()
     }
 }

@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.abdullah.composeapp.data.network.MealsModel
+import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.ui.common.CommonKeys.Companion.MEAL_OBJECT
 import com.abdullah.composeapp.ui.details.MealDetailsPage
 import com.abdullah.composeapp.ui.details.MealDetailsViewModel

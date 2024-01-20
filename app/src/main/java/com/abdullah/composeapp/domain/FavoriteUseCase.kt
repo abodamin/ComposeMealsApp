@@ -1,6 +1,6 @@
 package com.abdullah.composeapp.domain
 
-import com.abdullah.composeapp.data.network.MealsModel
+import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.data.repository.SharedPrefsRepository
 import com.google.gson.Gson
 import java.net.URLDecoder

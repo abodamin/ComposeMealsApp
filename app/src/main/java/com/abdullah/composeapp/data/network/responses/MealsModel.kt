@@ -1,4 +1,4 @@
-package com.abdullah.composeapp.data.network
+package com.abdullah.composeapp.data.network.responses
 
 
 import android.os.Parcelable

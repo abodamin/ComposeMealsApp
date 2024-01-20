@@ -40,7 +40,8 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.abdullah.composeapp.data.navigation.NavTarget
-import com.abdullah.composeapp.data.network.MealsModel
+import com.abdullah.composeapp.data.network.responses.MealsModel
+import com.abdullah.composeapp.ui.common.GeneralErrorScreen
 import com.abdullah.composeapp.ui.models.Resource
 import com.google.gson.Gson
 import java.net.URLEncoder
@@ -272,14 +273,3 @@ private fun MealCard(meals: MealsModel.Meal, navController: NavController? = nul
 
 }
 
-
-@Composable
-fun GeneralErrorScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-
-        Text(text = "Ops! something wrong happened")
-    }
-}

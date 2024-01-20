@@ -3,7 +3,7 @@ package com.abdullah.composeapp.ui.meals
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.abdullah.composeapp.data.network.MealsModel
+import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.data.repository.MealsRepository
 import com.abdullah.composeapp.ui.models.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
