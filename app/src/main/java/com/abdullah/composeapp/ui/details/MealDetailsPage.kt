@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -85,9 +87,10 @@ fun MealDetailsPage(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(it.calculateBottomPadding())
         ) {
-            val (appBar, ivMeal, title, about, rate, description, btn, loader) = createRefs()
+            val (appBar, ivMeal, title, about, rate, description, btn, loader, ingredientsTitle, ingredientsValue) = createRefs()
             val startGuideline = createGuidelineFromStart(16.dp)
             val endGuideline = createGuidelineFromEnd(16.dp)
 
@@ -194,6 +197,28 @@ fun MealDetailsPage(
                 is Resource.Success -> {
                     val data by remember{ derivedStateOf { viewModel.data }}
 
+//                ---Ingredients
+                    Text("Ingredients",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier
+                            .padding(top = 24.dp, bottom = 8.dp)
+                            .constrainAs(ingredientsTitle) {
+                                start.linkTo(startGuideline)
+                                top.linkTo(rate.bottom)
+                                width = Dimension.wrapContent
+
+                            })
+
+                    Text(  data.meals.first().getIngredients().trim(),
+                        style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.constrainAs(ingredientsValue) {
+                            start.linkTo(startGuideline)
+                            end.linkTo(endGuideline)
+                            top.linkTo(ingredientsTitle.bottom)
+                            width = Dimension.fillToConstraints
+                            height = Dimension.wrapContent
+
+                        })
 
                     //                ------
                     Text("About Meal",
@@ -202,12 +227,12 @@ fun MealDetailsPage(
                             .padding(top = 24.dp, bottom = 8.dp)
                             .constrainAs(about) {
                                 start.linkTo(startGuideline)
-                                top.linkTo(rate.bottom)
+                                top.linkTo(ingredientsValue.bottom)
                                 width = Dimension.wrapContent
 
                             })
-                    Text(  data.meals.first().strCategory,
-                        style = MaterialTheme.typography.body2,
+                    Text(  data.meals.first().strInstructions?:"",
+                        style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.SemiBold),
                         modifier = Modifier.constrainAs(description) {
                             start.linkTo(startGuideline)
                             end.linkTo(endGuideline)
@@ -215,10 +240,11 @@ fun MealDetailsPage(
                             width = Dimension.fillToConstraints
 
                         })
+
                     //                ------
                     Button(
                         modifier = Modifier
-                            .padding(top = 16.dp)
+                            .padding(top = 16.dp, bottom = 32.dp)
                             .constrainAs(btn) {
                                 start.linkTo(startGuideline)
                                 end.linkTo(endGuideline)
