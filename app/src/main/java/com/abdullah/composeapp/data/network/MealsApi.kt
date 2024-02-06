@@ -12,4 +12,6 @@ interface RestApi {
     @GET("1/lookup.php")
     suspend fun mealLookUp(@Query("i") id: String): MealDetailsResponse
 
+    @GET("1/filter.php")
+    suspend fun getMealsByCategory(@Query("c") category: String): MealsModel
 }

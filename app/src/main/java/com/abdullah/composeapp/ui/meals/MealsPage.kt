@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -52,6 +53,7 @@ import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.ui.common.GeneralErrorScreen
 import com.abdullah.composeapp.ui.models.Resource
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
 
@@ -106,10 +108,12 @@ fun MealsPage(
     navController: NavController,
     mViewModel: MealsViewModel,
 ) {
+    val selectedIndex by mViewModel.selectedCategory.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     //start on launching this Composable (like initState() in Flutter )
     LaunchedEffect(mViewModel) {
-        mViewModel.getMeals().collect {
+        mViewModel.getMealByCategory(mViewModel.createSampleCategoryList()[selectedIndex].strCategory).collect {
             mViewModel.requestState.value = it
         }
     }
@@ -129,14 +133,18 @@ fun MealsPage(
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
             }
 
-            val selectedIndex by mViewModel.selectedCategory.collectAsState()
-
             LazyRow(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)){
                 items(mViewModel.createSampleCategoryList().size){
                     FilterChipExample(
                         title = mViewModel.createSampleCategoryList()[it].strCategory,
                         onClick = {
                             mViewModel.setCategory(it)
+                            coroutineScope.launch {
+                                mViewModel.getMealByCategory(mViewModel.createSampleCategoryList()[it].strCategory)
+                                    .collect { it1 ->
+                                        mViewModel.requestState.value = it1
+                                    }
+                            }
                         },
                         selected = it == selectedIndex
                     )

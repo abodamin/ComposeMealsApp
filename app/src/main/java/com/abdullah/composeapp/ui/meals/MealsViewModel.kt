@@ -4,8 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.data.repository.MealsRepository
-import com.abdullah.composeapp.domain.models.CategoriesListUseCase
+import com.abdullah.composeapp.domain.GetMealByCategoryUseCase
+import com.abdullah.composeapp.domain.GetMealsListUseCase
 import com.abdullah.composeapp.domain.models.Category
+import com.abdullah.composeapp.domain.models.CategoryConstants
 import com.abdullah.composeapp.ui.models.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MealsViewModel @Inject constructor(
     private val mealsRepository: MealsRepository,
-    private val createSampleCategoriesListUseCase: CategoriesListUseCase
+    private val getMealsListUseCase: GetMealsListUseCase,
+    private val getMealByCategoryUseCase: GetMealByCategoryUseCase,
 ) : ViewModel() {
 
     val selectedCategory = MutableStateFlow<Int>(0)
@@ -40,14 +43,23 @@ class MealsViewModel @Inject constructor(
     }
 
     fun createSampleCategoryList(): MutableList<Category> {
-        return createSampleCategoriesListUseCase()
+        return CategoryConstants.categories.toMutableList()
     }
 
     fun setCategory(newIndex: Int) {
         selectedCategory.value = newIndex
     }
 
-    fun getMealByCategory() {
-
+    fun getMealByCategory(category: String ="Beef"): Flow<Resource<Any>> {
+        return flow<Resource<Any>> {
+            emit(Resource.Loading)
+            getMealByCategoryUseCase(category).let {
+                state.value = it.meals
+                emit(Resource.Success())
+            }
+            emit(Resource.Success())
+        }.catch { e ->
+            emit(Resource.Error(e))
+        }
     }
 }
