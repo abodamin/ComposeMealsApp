@@ -11,18 +11,26 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FilterChip
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -121,11 +129,20 @@ fun MealsPage(
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
             }
 
-            Box(
-                modifier = Modifier
-                    .height(30.dp)
-                    .requiredHeight(80.dp)
-            )
+            val selectedIndex by mViewModel.selectedCategory.collectAsState()
+
+            LazyRow(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)){
+                items(mViewModel.createSampleCategoryList().size){
+                    FilterChipExample(
+                        title = mViewModel.createSampleCategoryList()[it].strCategory,
+                        onClick = {
+                            mViewModel.setCategory(it)
+                        },
+                        selected = it == selectedIndex
+                    )
+
+                }
+            }
 
             when (mViewModel.requestState.value) {
                 is Resource.Loading -> {
@@ -273,3 +290,28 @@ private fun MealCard(meals: MealsModel.Meal, navController: NavController? = nul
 
 }
 
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun FilterChipExample(title: String, selected: Boolean = false, onClick: ()->Unit) {
+    FilterChip(
+        modifier = Modifier.padding(all = 4.dp),
+        selected = selected,
+        onClick = onClick,
+        content = {
+            Text(title)
+        },
+        leadingIcon = if (selected) {
+            {
+                Icon(
+                    imageVector = Icons.Filled.Done,
+                    contentDescription = "Selected icon",
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        } else {
+            null
+        },
+    )
+}
