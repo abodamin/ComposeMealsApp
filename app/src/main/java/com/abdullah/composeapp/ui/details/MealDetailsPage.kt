@@ -199,12 +199,12 @@ fun MealDetailsPage(
 
 //                ---Ingredients
                     Text("Ingredients",
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.subtitle1,
                         modifier = Modifier
                             .padding(top = 24.dp, bottom = 8.dp)
                             .constrainAs(ingredientsTitle) {
                                 start.linkTo(startGuideline)
-                                top.linkTo(rate.bottom)
+                                top.linkTo(title.bottom)
                                 width = Dimension.wrapContent
 
                             })
@@ -222,7 +222,7 @@ fun MealDetailsPage(
 
                     //                ------
                     Text("About Meal",
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.subtitle1,
                         modifier = Modifier
                             .padding(top = 24.dp, bottom = 8.dp)
                             .constrainAs(about) {

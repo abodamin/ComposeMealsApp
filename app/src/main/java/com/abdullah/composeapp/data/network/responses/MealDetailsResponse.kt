@@ -169,16 +169,16 @@ data class Meal(
     val dateModified: String?
 ) {
     fun getIngredients(): String {
-        return "${strMeasure1 ?: ""}  ${strIngredient1 ?: ""} \n${strMeasure2 ?: ""}  ${strIngredient2 ?: ""} \n "+
-        "${strMeasure3 ?: ""}  ${strIngredient3 ?: ""} \n${strMeasure4 ?: ""}  ${strIngredient4 ?: ""} \n" +
-        "${strMeasure5 ?: ""}  ${strIngredient5 ?: ""} \n${strMeasure6 ?: ""}  ${strIngredient6 ?: ""} \n" +
-        "${strMeasure7 ?: ""}  ${strIngredient7 ?: ""} \n${strMeasure8 ?: ""}  ${strIngredient8 ?: ""} \n" +
-        "${strMeasure9 ?: ""}  ${strIngredient9 ?: ""} \n${strMeasure10 ?: ""}  ${strIngredient10 ?: ""} \n" +
-        "${strMeasure11 ?: ""}  ${strIngredient11 ?: ""} \n${strMeasure12 ?: ""}  ${strIngredient12 ?: ""} \n" +
-        "${strMeasure13 ?: ""}  ${strIngredient13 ?: ""} \n${strMeasure14 ?: ""}  ${strIngredient14 ?: ""} \n" +
-        "${strMeasure15 ?: ""}  ${strIngredient15 ?: ""} \n${strMeasure16 ?: ""}  ${strIngredient16 ?: ""} \n" +
-        "${strMeasure17 ?: ""}  ${strIngredient17 ?: ""} \n${strMeasure18 ?: ""}  ${strIngredient18 ?: ""} \n" +
-        "${strMeasure19 ?: ""}  ${strIngredient19 ?: ""} \n${strMeasure20 ?: ""}  ${strIngredient20 ?: ""} \n"
+        return "${strMeasure1 ?: ""}  ${strIngredient1 ?: ""} \n\n${strMeasure2 ?: ""}  ${strIngredient2 ?: ""} \n\n "+
+        "${strMeasure3 ?: ""}  ${strIngredient3 ?: ""} \n\n${strMeasure4 ?: ""}  ${strIngredient4 ?: ""} \n\n" +
+        "${strMeasure5 ?: ""}  ${strIngredient5 ?: ""} \n\n${strMeasure6 ?: ""}  ${strIngredient6 ?: ""} \n\n" +
+        "${strMeasure7 ?: ""}  ${strIngredient7 ?: ""} \n\n${strMeasure8 ?: ""}  ${strIngredient8 ?: ""} \n\n" +
+        "${strMeasure9 ?: ""}  ${strIngredient9 ?: ""} \n\n${strMeasure10 ?: ""}  ${strIngredient10 ?: ""} \n\n" +
+        "${strMeasure11 ?: ""}  ${strIngredient11 ?: ""} \n\n${strMeasure12 ?: ""}  ${strIngredient12 ?: ""} \n\n" +
+        "${strMeasure13 ?: ""}  ${strIngredient13 ?: ""} \n\n${strMeasure14 ?: ""}  ${strIngredient14 ?: ""} \n\n" +
+        "${strMeasure15 ?: ""}  ${strIngredient15 ?: ""} \n\n${strMeasure16 ?: ""}  ${strIngredient16 ?: ""} \n\n" +
+        "${strMeasure17 ?: ""}  ${strIngredient17 ?: ""} \n\n${strMeasure18 ?: ""}  ${strIngredient18 ?: ""} \n\n" +
+        "${strMeasure19 ?: ""}  ${strIngredient19 ?: ""} \n\n${strMeasure20 ?: ""}  ${strIngredient20 ?: ""} \n\n"
 
     }
 }
