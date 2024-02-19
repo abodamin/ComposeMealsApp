@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -53,8 +50,8 @@ import com.abdullah.composeapp.ui.common.GeneralErrorScreen
 import com.abdullah.composeapp.ui.models.Resource
 import com.abdullah.composeapp.ui.theme.Shapes
 import com.abdullah.composeapp.ui.theme.primaryColor
+import com.abdullah.composeapp.ui.theme.secondaryColorDark
 import timber.log.Timber
-import kotlin.random.Random
 
 
 @Composable()
@@ -90,7 +87,7 @@ fun MealDetailsPage(
                 .verticalScroll(rememberScrollState())
                 .padding(it.calculateBottomPadding())
         ) {
-            val (appBar, ivMeal, title, about, rate, description, btn, loader, ingredientsTitle, ingredientsValue) = createRefs()
+            val (appBar, ivMeal, title, about, description, loader, ingredientsTitle, ingredientsValue) = createRefs()
             val startGuideline = createGuidelineFromStart(16.dp)
             val endGuideline = createGuidelineFromEnd(16.dp)
 
@@ -167,7 +164,7 @@ fun MealDetailsPage(
                     .fillMaxWidth()
                     .constrainAs(title) {
                         start.linkTo(startGuideline)
-                        end.linkTo(rate.start)
+                        end.linkTo(parent.end)
                         top.linkTo(ivMeal.bottom)
                         width = Dimension.fillToConstraints
                     })
@@ -199,7 +196,10 @@ fun MealDetailsPage(
 
 //                ---Ingredients
                     Text("Ingredients",
-                        style = MaterialTheme.typography.subtitle1,
+                        style = MaterialTheme.typography.subtitle1.copy(
+                            color = secondaryColorDark,
+                            fontWeight = FontWeight.Bold
+                        ),
                         modifier = Modifier
                             .padding(top = 24.dp, bottom = 8.dp)
                             .constrainAs(ingredientsTitle) {
@@ -222,7 +222,10 @@ fun MealDetailsPage(
 
                     //                ------
                     Text("About Meal",
-                        style = MaterialTheme.typography.subtitle1,
+                        style = MaterialTheme.typography.subtitle1.copy(
+                            color = secondaryColorDark,
+                            fontWeight = FontWeight.Bold
+                        ),
                         modifier = Modifier
                             .padding(top = 24.dp, bottom = 8.dp)
                             .constrainAs(about) {
@@ -233,7 +236,7 @@ fun MealDetailsPage(
                             })
                     Text(  data.meals.first().strInstructions?:"",
                         style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.SemiBold),
-                        modifier = Modifier.constrainAs(description) {
+                        modifier = Modifier.padding(bottom = 40.dp).constrainAs(description) {
                             start.linkTo(startGuideline)
                             end.linkTo(endGuideline)
                             top.linkTo(about.bottom)
@@ -241,45 +244,9 @@ fun MealDetailsPage(
 
                         })
 
-                    //                ------
-                    Button(
-                        modifier = Modifier
-                            .padding(top = 16.dp, bottom = 32.dp)
-                            .constrainAs(btn) {
-                                start.linkTo(startGuideline)
-                                end.linkTo(endGuideline)
-                                top.linkTo(description.bottom)
-                                bottom.linkTo(parent.bottom)
-                                width = Dimension.fillToConstraints
 
-                            },
-                        shape = RoundedCornerShape(20),
-                        onClick = {}
-                    ) {
-                        Text(
-                            text = "ORDER NOW",
-                            style = MaterialTheme.typography.button,
-                            color = Color.White,
-                            modifier = Modifier.padding(8.dp),
-                        )
-                    }
                 }
             }
-            Text("\$${Random(10).nextInt(100).toDouble()}",
-                style = TextStyle(
-                    fontSize = MaterialTheme.typography.h6.fontSize,
-                    fontWeight = FontWeight.Bold,
-                    color = primaryColor
-                ),
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .constrainAs(rate) {
-                        start.linkTo(title.end)
-                        end.linkTo(endGuideline)
-                        top.linkTo(title.top)
-                        bottom.linkTo(title.bottom)
-
-                    })
 
         }
         //                ------
