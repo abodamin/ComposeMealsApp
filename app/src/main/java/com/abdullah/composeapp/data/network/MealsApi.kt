@@ -2,6 +2,7 @@ package com.abdullah.composeapp.data.network
 
 import com.abdullah.composeapp.data.network.responses.MealDetailsResponse
 import com.abdullah.composeapp.data.network.responses.MealsModel
+import com.abdullah.composeapp.data.network.responses.SearchMealResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,4 +15,6 @@ interface RestApi {
 
     @GET("1/filter.php")
     suspend fun getMealsByCategory(@Query("c") category: String): MealsModel
+    @GET("1/search.php")
+    suspend fun getMealsBySearch(@Query("s") search: String): SearchMealResponse
 }
