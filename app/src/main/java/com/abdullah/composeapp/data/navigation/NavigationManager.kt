@@ -13,6 +13,7 @@ import com.abdullah.composeapp.ui.details.MealDetailsPage
 import com.abdullah.composeapp.ui.details.MealDetailsViewModel
 import com.abdullah.composeapp.ui.meals.MealsPage
 import com.abdullah.composeapp.ui.meals.MealsViewModel
+import com.abdullah.composeapp.ui.splash.SplashPage
 import com.google.gson.Gson
 import java.net.URLDecoder
 
@@ -22,8 +23,12 @@ fun NavigationComponent(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavTarget.MealsPage.name
+        startDestination = NavTarget.SplashPage.name
     ) {
+
+        composable(NavTarget.SplashPage.name) {
+            SplashPage(navigateAfter = {navController.navigate(NavTarget.MealsPage.name)})
+        }
 
         composable(NavTarget.MealsPage.name) {
             val hiltViewModel = hiltViewModel<MealsViewModel>()

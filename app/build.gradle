@@ -97,5 +97,6 @@ dependencies {
 
 
     implementation 'androidx.emoji2:emoji2:1.4.0' // Use a version compatible with API 33
+    implementation "com.airbnb.android:lottie-compose:6.3.0"
 
 }
