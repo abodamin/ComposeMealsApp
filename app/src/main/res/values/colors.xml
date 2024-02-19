@@ -13,5 +13,6 @@
     <color name="primaryColorLight">#F7C884</color>
     <color name="primaryColor">#FFFF9800</color>
     <color name="secondaryColor">#FF4CAF50</color>
+    <color name="yellow_bg">#dca323</color>
 
 </resources>

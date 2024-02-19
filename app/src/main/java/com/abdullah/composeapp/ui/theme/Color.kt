@@ -11,6 +11,7 @@ val Teal200 = Color(0xFF03DAC5)
 val Grey = Color(0xFFACACAC)
 val Red = Color(0xFFCE0C0C)
 val boxGrey = Color(0xFFDDDDDD)
+val appSurfaceColor = primaryColorLight.copy(0.2f)
 
 
 //

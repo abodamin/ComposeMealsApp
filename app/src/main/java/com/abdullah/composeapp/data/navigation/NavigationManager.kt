@@ -27,7 +27,12 @@ fun NavigationComponent(
     ) {
 
         composable(NavTarget.SplashPage.name) {
-            SplashPage(navigateAfter = {navController.navigate(NavTarget.MealsPage.name)})
+            SplashPage(navController ,navigateAfter = {
+                navController.navigate(NavTarget.MealsPage.name){
+                    popUpTo(NavTarget.SplashPage.name) { inclusive = false }
+                }
+
+            })
         }
 
         composable(NavTarget.MealsPage.name) {

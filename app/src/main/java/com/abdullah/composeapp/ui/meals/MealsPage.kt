@@ -72,6 +72,7 @@ import com.abdullah.composeapp.data.navigation.NavTarget
 import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.ui.common.GeneralErrorScreen
 import com.abdullah.composeapp.ui.models.Resource
+import com.abdullah.composeapp.ui.theme.appSurfaceColor
 import com.abdullah.composeapp.ui.theme.boxGrey
 import com.abdullah.composeapp.ui.theme.primaryColor
 import com.abdullah.composeapp.ui.theme.primaryColorLight
@@ -158,6 +159,7 @@ fun MealsPage(
     }
 
     Scaffold(
+        containerColor= appSurfaceColor,
         topBar = {
             MediumTopAppBar(
                 title = {
@@ -165,7 +167,7 @@ fun MealsPage(
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = Color.White,
+                    containerColor= Color.Transparent,
                     navigationIconContentColor = topAppBarElementColor,
                     titleContentColor = topAppBarElementColor,
                     actionIconContentColor = topAppBarElementColor,

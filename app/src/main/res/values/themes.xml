@@ -3,5 +3,6 @@
 
     <style name="Theme.ComposeApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/statusBarColor</item>
+        <item name="android:windowBackground">@color/yellow_bg</item>
     </style>
 </resources>

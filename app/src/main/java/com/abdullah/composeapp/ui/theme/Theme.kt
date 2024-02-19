@@ -17,6 +17,7 @@ private val LightColorPalette = lightColors(
     primary = primaryColor,
     primaryVariant = secondaryColor,
     secondary = Teal200,
+    surface = primaryColorLight,
 //    lightGrey = Grey
 
 

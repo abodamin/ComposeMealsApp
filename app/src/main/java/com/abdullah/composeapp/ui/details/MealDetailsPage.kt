@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +48,7 @@ import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.ui.common.GeneralErrorScreen
 import com.abdullah.composeapp.ui.models.Resource
 import com.abdullah.composeapp.ui.theme.Shapes
+import com.abdullah.composeapp.ui.theme.appSurfaceColor
 import com.abdullah.composeapp.ui.theme.primaryColor
 import com.abdullah.composeapp.ui.theme.secondaryColorDark
 import timber.log.Timber
@@ -84,6 +84,7 @@ fun MealDetailsPage(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
+                .background(color = appSurfaceColor)
                 .verticalScroll(rememberScrollState())
                 .padding(it.calculateBottomPadding())
         ) {
@@ -155,11 +156,7 @@ fun MealDetailsPage(
 
 //                ------
             Text(meal.strMeal,
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = MaterialTheme.typography.h4.fontSize,
-                    fontWeight = FontWeight.SemiBold
-                ),
+                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.SemiBold),
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(title) {
