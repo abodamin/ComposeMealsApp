@@ -233,7 +233,7 @@ fun MealsPage(
 
                 // Other items in the list
                 item {
-                    LazyRow(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
+                    LazyRow(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp, start = 8.dp)) {
                         items(mViewModel.createSampleCategoryList().size) {
                             CategoryFilterChip(
                                 title = mViewModel.createSampleCategoryList()[it].strCategory,
