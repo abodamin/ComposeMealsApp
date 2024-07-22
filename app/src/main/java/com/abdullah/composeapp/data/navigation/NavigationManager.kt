@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.abdullah.composeapp.data.network.responses.MealsModel
+import com.abdullah.composeapp.ui.chat.ChatPage
+import com.abdullah.composeapp.ui.chat.ChatPageViewModel
 import com.abdullah.composeapp.ui.common.CommonKeys.Companion.MEAL_OBJECT
 import com.abdullah.composeapp.ui.details.MealDetailsPage
 import com.abdullah.composeapp.ui.details.MealDetailsViewModel
@@ -28,6 +30,11 @@ fun NavigationComponent(
         composable(NavTarget.MealsPage.name) {
             val hiltViewModel = hiltViewModel<MealsViewModel>()
             MealsPage(navController, hiltViewModel)
+        }
+
+        composable(NavTarget.ChatPage.name) {
+            val hiltViewModel = hiltViewModel<ChatPageViewModel>()
+            ChatPage(navController, hiltViewModel)
         }
 
         composable(

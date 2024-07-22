@@ -34,6 +34,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -141,7 +142,8 @@ fun MealsPage(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val collapsed = 18
     val expanded = 34
-    val topAppBarTextSize = (collapsed + (expanded - collapsed) * (1 - scrollBehavior.state.collapsedFraction)).sp
+    val topAppBarTextSize =
+        (collapsed + (expanded - collapsed) * (1 - scrollBehavior.state.collapsedFraction)).sp
     val topAppBarElementColor = if (scrollBehavior.state.collapsedFraction > 0.5) {
         primaryColor
     } else {
@@ -162,6 +164,13 @@ fun MealsPage(
             MediumTopAppBar(
                 title = {
                     Text(text = "Meals App", fontSize = topAppBarTextSize)
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate(NavTarget.ChatPage.name)
+                    }) {
+                        Icon(Icons.Default.Email, contentDescription = "")
+                    }
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -219,7 +228,7 @@ fun MealsPage(
                                             }
                                     }
                                 },
-                                )
+                            )
                             IconButton(onClick = { isSearching = false }) {
                                 Icon(
                                     Icons.Default.Search,
@@ -388,7 +397,10 @@ fun CategoryFilterChip(title: String, selected: Boolean = false, onClick: () -> 
         modifier = Modifier.padding(all = 4.dp),
         selected = selected,
         onClick = onClick,
-        colors = ChipDefaults.filterChipColors(backgroundColor = secondaryColorLight, selectedBackgroundColor = secondaryColorDark),
+        colors = ChipDefaults.filterChipColors(
+            backgroundColor = secondaryColorLight,
+            selectedBackgroundColor = secondaryColorDark
+        ),
         content = {
             Text(title, style = TextStyle(color = Color.White, fontWeight = FontWeight.Bold))
         },

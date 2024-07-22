@@ -42,6 +42,6 @@ fun AppThemeAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
         colors = colors,
         typography = Typography,
         shapes = Shapes,
-        content = content
+        content = content,
     )
 }
