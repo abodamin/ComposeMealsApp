@@ -73,6 +73,7 @@ import com.abdullah.composeapp.data.network.responses.MealsModel
 import com.abdullah.composeapp.ui.common.GeneralErrorScreen
 import com.abdullah.composeapp.ui.models.Resource
 import com.abdullah.composeapp.ui.theme.boxGrey
+import com.abdullah.composeapp.ui.theme.mSurfaceColor
 import com.abdullah.composeapp.ui.theme.primaryColor
 import com.abdullah.composeapp.ui.theme.primaryColorLight
 import com.abdullah.composeapp.ui.theme.secondaryColorDark
@@ -90,7 +91,6 @@ fun MealsPagePreview() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.background)
         ) {
             TopAppBar {
                 Text(text = "Meals App", style = MaterialTheme.typography.subtitle1)
@@ -143,9 +143,9 @@ fun MealsPage(
     val expanded = 34
     val topAppBarTextSize = (collapsed + (expanded - collapsed) * (1 - scrollBehavior.state.collapsedFraction)).sp
     val topAppBarElementColor = if (scrollBehavior.state.collapsedFraction > 0.5) {
-        primaryColor
+        mSurfaceColor
     } else {
-        Color.White
+        mSurfaceColor
     }
 
     // Start on launching this Composable (like initState() in Flutter)
@@ -165,7 +165,7 @@ fun MealsPage(
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = Color.White,
+                    containerColor = mSurfaceColor,
                     navigationIconContentColor = topAppBarElementColor,
                     titleContentColor = topAppBarElementColor,
                     actionIconContentColor = topAppBarElementColor,
@@ -179,6 +179,7 @@ fun MealsPage(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(color = mSurfaceColor)
                     .padding(padding),
             ) {
 

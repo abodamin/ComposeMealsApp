@@ -10,6 +10,7 @@ private val DarkColorPalette = darkColors(
     primary = primaryColorLight,
     primaryVariant = secondaryColor,
     secondary = Teal200,
+    background = mSurfaceColor
 //    lightGrey = Grey
 )
 
@@ -17,6 +18,7 @@ private val LightColorPalette = lightColors(
     primary = primaryColor,
     primaryVariant = secondaryColor,
     secondary = Teal200,
+    background = mSurfaceColor
 //    lightGrey = Grey
 
 

@@ -12,6 +12,8 @@ val Grey = Color(0xFFACACAC)
 val Red = Color(0xFFCE0C0C)
 val boxGrey = Color(0xFFDDDDDD)
 
+val mSurfaceColor = primaryColorLight.copy(alpha = 0.1f)
+
 
 //
 //val one = Color(0xFFF8A57F)
