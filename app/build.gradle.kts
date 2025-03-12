@@ -26,7 +26,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -42,7 +45,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -50,52 +53,43 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.ui)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.androidx.material)
-    implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(Dependencies.androidxCoreKtx)
+    implementation(Dependencies.androidxActivityCompose)
+    implementation(Dependencies.androidxMaterial3)
+    implementation(Dependencies.coilCompose)
+    implementation(Dependencies.converterGson)
+    implementation(Dependencies.hiltAndroid)
+    implementation(Dependencies.kotlinxCoroutinesAndroid)
+    implementation(Dependencies.loggingInterceptor)
+    implementation(Dependencies.lottieCompose)
+    implementation(Dependencies.timber)
+    implementation(Dependencies.androidxLifecycleRuntimeKtx)
+    implementation(Dependencies.androidxLifecycleViewmodelKtx)
+    implementation(Dependencies.androidxNavigationCompose)
+    implementation(Dependencies.androidxHiltNavigationCompose)
+    implementation(Dependencies.androidxRuntimeLivedata)
+    implementation(Dependencies.androidxUi)
+    implementation(Dependencies.okhttp)
+    implementation(Dependencies.okhttpUrlconnection)
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.uiToolingPreview)
+    implementation(Dependencies.androidxConstraintlayoutCompose)
+    implementation(Dependencies.androidxEmoji2)
+    implementation(Dependencies.androidxLifecycleRuntimeCompose)
+    implementation(Dependencies.androidxLifecycleViewmodelCompose)
+    implementation(Dependencies.androidxMaterial)
 
-    // Ui
-    implementation(libs.androidx.constraintlayout.compose)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.timber)
+    testImplementation(Dependencies.junit)
 
+    androidTestImplementation(Dependencies.androidxJunit)
+    androidTestImplementation(Dependencies.androidxEspressoCore)
+    androidTestImplementation(Dependencies.androidxUiTestJunit4)
 
-    // Retrofit for network requests
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.urlconnection)
-    implementation(libs.logging.interceptor)
+    debugImplementation(Dependencies.androidxUiTestManifest)
+    debugImplementation(Dependencies.androidxUiTooling)
 
-    // Coroutines for asynchronous programming
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.runtime.livedata)
-
-
-    // Glide
-    implementation(libs.coil.compose)
-    // dagger
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    // ViewModel
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-
-    implementation(libs.androidx.emoji2)
-    implementation(libs.lottie.compose)
-
+    kapt(Dependencies.hiltAndroidCompiler)
 }
+
+
+
