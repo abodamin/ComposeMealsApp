@@ -1,37 +1,73 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
-    id("kotlin-parcelize")
+    id(BuildPlugins.ANDROID_APPLICATION)
+    id(BuildPlugins.KOTLIN_ANDROID)
+    id(BuildPlugins.KOTLIN_KAPT)
+    id(BuildPlugins.DAGGER_HILT)
+    id(BuildPlugins.KOTLIN_PARCELIZE)
 }
 
 android {
-    namespace = "com.abdullah.composeapp"
-    compileSdk = 35
+    namespace = BuildConfig.APP_ID
+    compileSdk = BuildConfig.COMPILE_SDK_VERSION
 
     defaultConfig {
-        applicationId = "com.abdullah.composeapp"
-        minSdk = 21
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = BuildConfig.APP_ID
+        minSdk = BuildConfig.MIN_SDK_VERSION
+        targetSdk = BuildConfig.TARGET_SDK_VERSION
+        versionCode = ReleaseConfig.VERSION_CODE
+        versionName = ReleaseConfig.VERSION_NAME
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = TestBuildConfig.TEST_INSTRUMENTATION_RUNNER
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
+    flavorDimensions.add(BuildDimensions.APP)
+    flavorDimensions.add(BuildDimensions.STORE)
+
+    productFlavors {
+        BuildFlavor.Google.create(this)
+        BuildFlavor.Huawei.create(this)
+        BuildFlavor.Client.create(this)
+        BuildFlavor.Driver.create(this)
+    }
+
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        getByName(BuildTypes.RELEASE) {
+            isMinifyEnabled = Build.Release.isMinifyEnabled
+            enableUnitTestCoverage = Build.Release.enableUnitTestCoverage
+            isDebuggable = Build.Release.isDebuggable
+            versionNameSuffix = Build.Release.versionNameSuffix
+            applicationIdSuffix = Build.Release.applicationIdSuffix
+            signingConfig = signingConfigs.getByName(SigningTypes.RELEASE)
+        }
+
+        getByName(BuildTypes.DEBUG){
+            isMinifyEnabled = Build.Debug.isMinifyEnabled
+            enableUnitTestCoverage = Build.Debug.enableUnitTestCoverage
+            isDebuggable = Build.Debug.isDebuggable
+            versionNameSuffix = Build.Debug.versionNameSuffix
+            applicationIdSuffix = Build.Debug.applicationIdSuffix
+            signingConfig = signingConfigs.getByName(SigningTypes.DEBUG)
+        }
+
+        create(BuildTypes.RELEASE_EXTERNAL_QA) {
+            isMinifyEnabled = Build.ReleaseExternalQa.isMinifyEnabled
+            enableUnitTestCoverage = Build.ReleaseExternalQa.enableUnitTestCoverage
+            isDebuggable = Build.ReleaseExternalQa.isDebuggable
+            versionNameSuffix = Build.ReleaseExternalQa.versionNameSuffix
+            applicationIdSuffix = Build.ReleaseExternalQa.applicationIdSuffix
+            signingConfig = signingConfigs.getByName(SigningTypes.RELEASE_EXTERNAL_QA)
         }
     }
+
+    signingConfigs {
+        BuildSigning.Release.create(this)
+        BuildSigning.ReleaseExternalQa.create(this)
+        BuildSigning.Debug.create(this)
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
